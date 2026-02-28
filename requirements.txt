@@ -6,3 +6,4 @@ python-dotenv
 alembic
 psycopg2-binary
 pydantic[email]
+jinja2

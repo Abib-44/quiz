@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Choose a category</title>
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=DM+Sans:wght@400;500&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --bg: #0d0d0d; --surface: #161616; --border: #2a2a2a;
+      --accent: #f0e040; --text: #f0f0f0; --muted: #888; --radius: 16px;
+    }
+    body {
+      background: var(--bg); color: var(--text);
+      font-family: 'DM Sans', sans-serif; min-height: 100vh;
+      display: flex; align-items: center; justify-content: center; padding: 24px;
+    }
+    body::before {
+      content: ''; position: fixed; inset: 0;
+      background: radial-gradient(ellipse 60% 40% at 80% 10%, rgba(240,224,64,0.08) 0%, transparent 60%),
+                  radial-gradient(ellipse 50% 30% at 10% 90%, rgba(92,255,176,0.06) 0%, transparent 60%);
+      pointer-events: none; z-index: 0;
+    }
+    .wrapper { position: relative; z-index: 1; width: 100%; max-width: 680px; }
+    header { margin-bottom: 48px; text-align: center; }
+    header .label { font-size: 11px; letter-spacing: 0.25em; text-transform: uppercase; color: var(--accent); margin-bottom: 12px; }
+    header h1 { font-family: 'Syne', sans-serif; font-size: clamp(2.4rem, 6vw, 3.6rem); font-weight: 800; line-height: 1; letter-spacing: -0.03em; }
+    header h1 span { color: var(--accent); }
+    header p { margin-top: 14px; color: var(--muted); font-size: 0.95rem; }
+    .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 16px; }
+    .category-card {
+      display: block; background: var(--surface); border: 1px solid var(--border);
+      border-radius: var(--radius); padding: 28px 24px; text-decoration: none;
+      color: var(--text); position: relative; overflow: hidden; transition: all 0.25s ease;
+    }
+    .category-card::after {
+      content: ''; position: absolute; top: 0; left: 0; right: 0; height: 1px;
+      background: linear-gradient(90deg, transparent, var(--accent), transparent); opacity: 0; transition: opacity 0.25s ease;
+    }
+    .category-card:hover { border-color: var(--accent); transform: translateY(-4px); box-shadow: 0 12px 32px rgba(0,0,0,0.4); }
+    .category-card:hover::after { opacity: 0.5; }
+    .category-name { font-family: 'Syne', sans-serif; font-size: 1.1rem; font-weight: 700; margin-bottom: 8px; }
+    .category-arrow { color: var(--accent); font-size: 1.2rem; margin-top: 16px; display: block; transition: transform 0.2s ease; }
+    .category-card:hover .category-arrow { transform: translateX(4px); }
+    .slide-in { animation: slideIn 0.35s cubic-bezier(0.4, 0, 0.2, 1) both; }
+    .slide-in:nth-child(2) { animation-delay: 0.05s; }
+    .slide-in:nth-child(3) { animation-delay: 0.10s; }
+    .slide-in:nth-child(4) { animation-delay: 0.15s; }
+    .slide-in:nth-child(5) { animation-delay: 0.20s; }
+    @keyframes slideIn { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: translateY(0); } }
+  </style>
+</head>
+<body>
+  <div class="wrapper">
+    <header>
+      <div class="label">Pick a topic</div>
+      <h1>Categories<span>.</span></h1>
+      <p>Choose a category to start the quiz.</p>
+    </header>
+    <div class="grid">
+      {% for cat in categories %}
+      <a href="/{{ cat.name }}" class="category-card slide-in">
+        <div class="category-name">{{ cat.name }}</div>
+        <span class="category-arrow">→</span>
+      </a>
+      {% endfor %}
+    </div>
+  </div>
+</body>
+</html>

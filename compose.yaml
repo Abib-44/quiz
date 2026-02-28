@@ -1,10 +1,11 @@
-version: "3.9"
 services:
   backend:
     build: .
     container_name: backend
     ports:
       - "8000:80"
+    volumes:
+      - ./app:/code/app
     environment:
       - POSTGRES_USER=yourUser
       - POSTGRES_PW=changeit
@@ -12,29 +13,26 @@ services:
       - POSTGRES_HOST=postgres
       - POSTGRES_PORT=5432
     depends_on:
-      - postgres
+      postgres:
+        condition: service_healthy
 
   postgres:
-    image: postgres:18
+    image: postgres:17
     container_name: postgres
     environment:
       - POSTGRES_USER=yourUser
       - POSTGRES_PASSWORD=changeit
       - POSTGRES_DB=postgres
     volumes:
-      - pgdata:/var/lib/postgresql
+      - pgdata:/var/lib/postgresql/data
       - ./db/init:/docker-entrypoint-initdb.d
     ports:
       - "5432:5432"
-
-  pgadmin:
-    image: dpage/pgadmin4
-    container_name: pgadmin
-    environment:
-      - PGADMIN_DEFAULT_EMAIL=your@email.com
-      - PGADMIN_DEFAULT_PASSWORD=changeit
-    ports:
-      - "5050:80"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U yourUser -d postgres"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
 
 volumes:
   pgdata:
